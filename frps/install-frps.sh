@@ -13,8 +13,8 @@ str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-program_version_link="https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/version.sh"
-str_install_shell=https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/install-frps.sh
+program_version_link="https://raw.githubusercontent.com/chijinchao/onekey-install-shell/master/frps/version.sh"
+str_install_shell=https://raw.githubusercontent.com/chijinchao/onekey-install-shell/master/frps/install-frps.sh
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
@@ -174,41 +174,15 @@ fun_get_version(){
         [ -x ${ver_file} ] && chmod +x ${ver_file}
         . ${ver_file}
     fi
-    if [ -z ${FRPS_VER} ] || [ -z ${FRPS_INIT} ] || [ -z ${aliyun_download_url} ] || [ -z ${github_download_url} ]; then
+    if [ -z ${FRPS_VER} ] || [ -z ${FRPS_INIT} ] || [ -z ${github_download_url} ]; then
         echo -e "${COLOR_RED}Error: ${COLOR_END}Get Program version failed!"
         exit 1
     fi
 }
-fun_getServer(){
-    def_server_url="aliyun"
-    echo ""
-    echo -e "Please select ${program_name} download url:"
-    echo -e "[1].aliyun (default)"
-    echo -e "[2].github"
-    read -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
-    [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
-    case "${set_server_url}" in
-        1|[Aa][Ll][Ii][Yy][Uu][Nn])
-            program_download_url=${aliyun_download_url}
-            ;;
-        2|[Gg][Ii][Tt][Hh][Uu][Bb])
-            program_download_url=${github_download_url}
-            ;;
-        [eE][xX][iI][tT])
-            exit 1
-            ;;
-        *)
-            program_download_url=${aliyun_download_url}
-            ;;
-    esac
-    echo "---------------------------------------"
-    echo "Your select: ${set_server_url}"
-    echo "---------------------------------------"
-}
 fun_getVer(){
     echo -e "Loading network version for ${program_name}, please wait..."
     program_latest_filename="frp_${FRPS_VER}_linux_${ARCHS}.tar.gz"
-    program_latest_file_url="${program_download_url}/v${FRPS_VER}/${program_latest_filename}"
+    program_latest_file_url="${github_download_url}/v${FRPS_VER}/${program_latest_filename}"
     if [ -z "${program_latest_filename}" ]; then
         echo -e "${COLOR_RED}Load network version failed!!!${COLOR_END}"
     else
@@ -338,7 +312,6 @@ pre_install_clang(){
         clear
         fun_clangcn
         fun_get_version
-        fun_getServer
         fun_getVer
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
@@ -805,7 +778,6 @@ update_program_server_clang(){
         fi
         [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
         echo -e "Loading network version for ${program_name}, please wait..."
-        fun_getServer
         fun_getVer >/dev/null 2>&1
         local_program_version=`${str_program_dir}/${program_name} --version`
         echo -e "${COLOR_GREEN}${program_name}  local version ${local_program_version}${COLOR_END}"
