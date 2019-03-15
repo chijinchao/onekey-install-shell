@@ -32,16 +32,16 @@ RET_VAL=0
 
 [ -x ${BIN} ] || exit 0
 strLog=""
-# fun_clangcn()
-# {
-#     echo ""
-#     echo "+--------------------------------------------------+"
-#     echo "|        Manager for ${ProgramName}, Written by Clang        |"
-#     echo "+--------------------------------------------------+"
-#     echo "| Intro: http://koolshare.cn/thread-65379-1-1.html |"
-#     echo "+--------------------------------------------------+"
-#     echo ""
-# }
+fun_clangcn()
+{
+    echo ""
+    echo "+--------------------------------------------------+"
+    echo "|        Manager for ${ProgramName}, Written by Clang        |"
+    echo "+--------------------------------------------------+"
+    echo "| Intro: http://koolshare.cn/thread-65379-1-1.html |"
+    echo "+--------------------------------------------------+"
+    echo ""
+}
 
 fun_check_run(){
     PID=`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`
@@ -60,7 +60,7 @@ fun_load_config(){
 fun_start()
 {
     if [ "${arg1}" = "start" ]; then
-    #   fun_clangcn
+      fun_clangcn
     fi
     if fun_check_run; then
         echo "${ProgramName} (pid $PID) already running."
@@ -81,7 +81,7 @@ fun_start()
 
 fun_stop(){
     if [ "${arg1}" = "stop" ] || [ "${arg1}" = "restart" ]; then
-    #   fun_clangcn
+      fun_clangcn
     fi
     if fun_check_run; then
         echo -n "Stoping ${ProgramName} (pid $PID)... "
@@ -157,7 +157,7 @@ case "${arg1}" in
         fun_help
     ;;
     *)
-        # fun_clangcn
+        fun_clangcn
         echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
         RET_VAL=1
     ;;
